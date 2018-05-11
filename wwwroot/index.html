@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FrontEnd</title>
+</head>
+<body onload="LoadBlogs();">
+    <p>ѕример веб-API на основе руководства MS <a href="https://docs.microsoft.com/ru-ru/ef/core/get-started/aspnetcore/existing-db">Ќачало работы с EF Core в ASP.NET Core с существующей базой данных</a></p>
+    <p id="blogsDiv"></p>
+
+    <div>
+        <select id="deleteDiv"></select>
+        <button onclick="DeleteBlog();">Delete</button>
+    </div>
+
+    <br />
+    <div>
+        <form>
+            <input id="createDiv" type="text" />
+        </form>
+        <button onclick="CreateBlog()">Create</button>
+    </div>
+
+    <p>Simple text</p>
+
+    <script>
+        function DeleteBlog() {
+            var request = new XMLHttpRequest();
+            select = document.getElementById("deleteDiv");
+            id = select.options[select.selectedIndex].value;
+            url = "/api/blogsapi/" + id;
+            request.open("DELETE", url, false);
+            request.send();
+        }
+
+        function CreateBlog() {
+            urlText = document.getElementById("createDiv").value;
+
+            var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+            xmlhttp.open("POST", "/api/blogsapi/");
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send(JSON.stringify({ url: urlText }));
+        }
+
+        function LoadBlogs() {
+            var myObj, i, j, x, x2 = "";
+            var request = new XMLHttpRequest();
+            request.open("GET", "/api/blogsapi/", false);
+            request.send();
+
+            myObj = JSON.parse(request.responseText);
+            var x = "";
+            for (i in myObj) {
+                x += "<h3>" + myObj[i].blogId + " : " + myObj[i].url + "</h3>";
+                for (j in myObj[i].post) {
+                    x += myObj[i].post[j].content + "<br>";
+                }
+            }
+            document.getElementById("blogsDiv").innerHTML = x;
+
+            for (i in myObj) {
+                x2 += "<option value=" + myObj[i].blogId + ">" + myObj[i].blogId + "</option>";
+            }
+
+            document.getElementById("deleteDiv").innerHTML = x2;
+        }
+        window.setInterval(LoadBlogs, 5000);
+    </script>
+</body>
+</html>
