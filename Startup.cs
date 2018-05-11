@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 #region AddedUsings
 using EFGetStarted.AspNetCore.ExistingDb.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 #endregion
 
 namespace EFGetStarted.AspNetCore.ExistingDb
@@ -28,6 +29,10 @@ namespace EFGetStarted.AspNetCore.ExistingDb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
             services.AddMvc();
 
             var connection = @"Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True;ConnectRetryCount=0";
