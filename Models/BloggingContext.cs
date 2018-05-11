@@ -1,10 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace EFGetStarted.AspNetCore.ExistingDb.Models
 {
-    public partial class BloggingContext : DbContext
+    public partial class BloggingContext : IdentityDbContext<User>
     {
         #region Constructor
         public BloggingContext(DbContextOptions<BloggingContext> options)
@@ -17,6 +18,8 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Blog>(entity =>
             {
                 entity.Property(e => e.Url).IsRequired();
