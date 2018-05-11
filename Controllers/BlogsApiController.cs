@@ -24,7 +24,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
         [HttpGet]
         public IEnumerable<Blog> GetBlog()
         {
-            return _context.Blog;
+            return _context.Blog.Include (p=>p.Post);
         }
 
         // GET: api/BlogsApi/5
