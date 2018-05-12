@@ -49,17 +49,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-            
+         
             app.UseAuthentication();
             app.UseDefaultFiles();
             app.UseStaticFiles();
