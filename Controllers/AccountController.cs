@@ -61,5 +61,57 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
                 return Ok(errorMsg);
             }
         }
+        [HttpPost]
+        [Route("api/Account/Login")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result =
+                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    var msg = new
+                    {
+                        message = "Выполнен вход пользователем: " + model.Email
+                    };
+                    return Ok(msg);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    var errorMsg = new
+                    {
+                        message = "Вход не выполнен.",
+                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
+                    };
+                    return Ok(errorMsg);
+                }
+            }
+            else
+            {
+                var errorMsg = new
+                {
+                    message = "Вход не выполнен.",
+                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
+                };
+                return Ok(errorMsg);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/Account/LogOff")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
+        {
+            // Удаление куки
+            await _signInManager.SignOutAsync();
+            var msg = new
+            {
+                message = "Выполнен выход."
+            };
+            return Ok(msg);
+        }
     }
 }
