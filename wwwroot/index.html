@@ -8,49 +8,89 @@
         }
     </style>
 </head>
-<body onload="LoadBlogs();">
+<body onload="LoadBlogs(); GetCurrentUser();">
     <!--<p>Пример веб-API на основе руководства MS <a href="https://docs.microsoft.com/ru-ru/ef/core/get-started/aspnetcore/existing-db">Начало работы с EF Core в ASP.NET Core с существующей базой данных</a></p>-->
-
-    <h3>Вход для зарегистрированных пользователей</h3>
-    <form>
-        <div class="msgClass">
-            <div id="msg"></div>
-            <ul id="formError"></ul>
-        </div>
-        <div>
-            <label for="">Email: </label><br />
-            <input type="text" id="Email" name="Email">
-        </div>
-        <div>
-            <label for="">Пароль: </label><br />
-            <input type="password" id="Password" name="Password">
-        </div>
-    </form>
-    <button id="loginBtn">Войти</button>
-    <br />
-    <br />
-    <a href="register.html">Регистрация нового пользователя</a>
-
-    <p id="blogsDiv"></p>
-
-    <div>
-        <select id="deleteDiv"></select>
-        <button onclick="DeleteBlog();">Delete</button>
-    </div>
-
-    <br />
-    <div>
+    <div class="container">
+        <h3>Вход для зарегистрированных пользователей</h3>
         <form>
+            <div class="msgClass">
+                <div id="msgAuth"></div>
+                <div id="msg"></div>
+                <ul id="formError"></ul>
+            </div>
+            <div>
+                <label for="">Email: </label><br />
+                <input type="text" id="Email" name="Email">
+            </div>
+            <div>
+                <label for="">Пароль: </label><br />
+                <input type="password" id="Password" name="Password">
+            </div>
+        </form>
+        <button id="loginBtn">Войти</button>
+    </div>
+    <p>
+        <a href="register.html">Регистрация нового пользователя</a>
+    </p>
+    <p>
+        <a href="api/Account/LogOff">Выход</a>
+    </p>
+
+
+    <div>
+        <h3>Создание нового блога</h3>
+        <form>
+            <label for="">URL:</label>
             <input id="createDiv" type="text" />
         </form>
-        <button onclick="CreateBlog()">Create</button>
+        <button onclick="CreateBlog();">Create</button>
+        <div class="msgClass">
+            <div id="msgCrt"></div>
+        </div>
     </div>
 
-    <p>Simple text</p>
+    <br />
+    <div>
+        <h3>Удаление блога</h3>
+        <select id="deleteDiv"></select>
+        <button onclick="DeleteBlog();">Delete</button>
+        <div class="msgClass">
+            <div id="msgDel"></div>
+        </div>
+    </div>
+
+    <br />
+    <div>
+        <h3>Список блогов с постами</h3>
+        <div id="blogsDiv"></div>
+    </div>
+
 
     <script>
+        function GetCurrentUser() {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "/api/Account/isAuthenticated", true);
+                xmlhttp.onreadystatechange = function () {
+                    var myObj = "";
+                    myObj = xmlhttp.responseText != "" ? JSON.parse(xmlhttp.responseText) : {};
+                    document.getElementById("msgAuth").innerHTML = myObj.message;
+                }
+                xmlhttp.send();
+            }
+
         function DeleteBlog() {
             var request = new XMLHttpRequest();
+            request.onload = function (ev) {
+                var msg = ""
+                if (request.status == 401) {
+                    msg = "У вас не хватает прав для удаления";
+                } else if (request.status == 200) {
+                    msg = "Запись удалена";
+                } else {
+                    msg = "Неизвестная ошибка";
+                }
+                document.getElementById("msgDel").innerHTML = msg;
+            }
             select = document.getElementById("deleteDiv");
             id = select.options[select.selectedIndex].value;
             url = "/api/blogsapi/" + id;
@@ -61,7 +101,18 @@
         function CreateBlog() {
             urlText = document.getElementById("createDiv").value;
 
-            var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onload = function (ev) {
+                var msg = ""
+                if (xmlhttp.status == 401) {
+                    msg = "У вас не хватает прав для создания";
+                } else if (xmlhttp.status == 201) {
+                    msg = "Запись добавлена";
+                } else {
+                    msg = "Неизвестная ошибка";
+                }
+                document.getElementById("msgCrt").innerHTML = msg;
+            }
             xmlhttp.open("POST", "/api/blogsapi/");
             xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xmlhttp.send(JSON.stringify({ url: urlText }));
@@ -74,9 +125,10 @@
             request.send();
 
             myObj = JSON.parse(request.responseText);
+
             var x = "";
             for (i in myObj) {
-                x += "<h3>" + myObj[i].blogId + " : " + myObj[i].url + "</h3>";
+                x += "<h4>" + myObj[i].blogId + " : " + myObj[i].url + "</h4>";
                 for (j in myObj[i].post) {
                     x += myObj[i].post[j].content + "<br>";
                 }
@@ -88,6 +140,7 @@
             }
 
             document.getElementById("deleteDiv").innerHTML = x2;
+            GetCurrentUser();
         }
         window.setInterval(LoadBlogs, 5000);
 
