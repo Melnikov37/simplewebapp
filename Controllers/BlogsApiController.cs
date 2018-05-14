@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EFGetStarted.AspNetCore.ExistingDb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
 {
@@ -48,6 +49,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
 
         // PUT: api/BlogsApi/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutBlog([FromRoute] int id, [FromBody] Blog blog)
         {
             if (!ModelState.IsValid)
@@ -83,6 +85,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
 
         // POST: api/BlogsApi
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostBlog([FromBody] Blog blog)
         {
             if (!ModelState.IsValid)
@@ -96,8 +99,9 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
             return CreatedAtAction("GetBlog", new { id = blog.BlogId }, blog);
         }
 
-        // DELETE: api/BlogsApi/5
+        // DELETE: api/BlogsApi/5        
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteBlog([FromRoute] int id)
         {
             if (!ModelState.IsValid)
