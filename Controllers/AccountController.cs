@@ -100,7 +100,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("api/Account/LogOff")]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
@@ -113,5 +113,21 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
             };
             return Ok(msg);
         }
+
+        [HttpPost]
+        [Route("api/Account/isAuthenticated")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogisAuthenticatedOff()
+        {
+            User usr = await GetCurrentUserAsync();
+            var message = usr == null ? "Вы Гость. Пожалуйста, выполните вход." : "Вы вошли как: " + usr.UserName;
+            var msg = new
+            {
+                message
+            };
+            return Ok(msg);
+
+        }
+        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
