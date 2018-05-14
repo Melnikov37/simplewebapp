@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EFGetStarted.AspNetCore.ExistingDb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
 {
@@ -47,6 +47,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
         }
 
         // PUT: api/BlogsApi/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBlog([FromRoute] int id, [FromBody] Blog blog)
         {
@@ -82,6 +83,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
         }
 
         // POST: api/BlogsApi
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PostBlog([FromBody] Blog blog)
         {
@@ -97,6 +99,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
         }
 
         // DELETE: api/BlogsApi/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlog([FromRoute] int id)
         {
