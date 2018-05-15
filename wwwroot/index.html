@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <title>FrontEnd</title>
     <style>
         .msgClass {
@@ -9,9 +10,9 @@
     </style>
 </head>
 <body onload="LoadBlogs(); GetCurrentUser();">
-    <!--<p>Пример веб-API на основе руководства MS <a href="https://docs.microsoft.com/ru-ru/ef/core/get-started/aspnetcore/existing-db">Начало работы с EF Core в ASP.NET Core с существующей базой данных</a></p>-->
+    <!--<p>РџСЂРёРјРµСЂ РІРµР±-API РЅР° РѕСЃРЅРѕРІРµ СЂСѓРєРѕРІРѕРґСЃС‚РІР° MS <a href="https://docs.microsoft.com/ru-ru/ef/core/get-started/aspnetcore/existing-db">РќР°С‡Р°Р»Рѕ СЂР°Р±РѕС‚С‹ СЃ EF Core РІ ASP.NET Core СЃ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…</a></p>-->
     <div class="container">
-        <h3>Вход для зарегистрированных пользователей</h3>
+        <h3>Р’С…РѕРґ РґР»СЏ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№</h3>
         <form>
             <div class="msgClass">
                 <div id="msgAuth"></div>
@@ -23,22 +24,22 @@
                 <input type="text" id="Email" name="Email">
             </div>
             <div>
-                <label for="">Пароль: </label><br />
+                <label for="">РџР°СЂРѕР»СЊ: </label><br />
                 <input type="password" id="Password" name="Password">
             </div>
         </form>
-        <button id="loginBtn">Войти</button>
+        <button id="loginBtn">Р’РѕР№С‚Рё</button>
     </div>
     <p>
-        <a href="register.html">Регистрация нового пользователя</a>
+        <a href="register.html">Р РµРіРёСЃС‚СЂР°С†РёСЏ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</a>
     </p>
     <p>
-        <a href="api/Account/LogOff">Выход</a>
+        <a href="api/Account/LogOff">Р’С‹С…РѕРґ</a>
     </p>
 
 
     <div>
-        <h3>Создание нового блога</h3>
+        <h3>РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ Р±Р»РѕРіР°</h3>
         <form>
             <label for="">URL:</label>
             <input id="createDiv" type="text" />
@@ -51,7 +52,7 @@
 
     <br />
     <div>
-        <h3>Удаление блога</h3>
+        <h3>РЈРґР°Р»РµРЅРёРµ Р±Р»РѕРіР°</h3>
         <select id="deleteDiv"></select>
         <button onclick="DeleteBlog();">Delete</button>
         <div class="msgClass">
@@ -61,7 +62,7 @@
 
     <br />
     <div>
-        <h3>Список блогов с постами</h3>
+        <h3>РЎРїРёСЃРѕРє Р±Р»РѕРіРѕРІ СЃ РїРѕСЃС‚Р°РјРё</h3>
         <div id="blogsDiv"></div>
     </div>
 
@@ -83,11 +84,11 @@
             request.onload = function (ev) {
                 var msg = ""
                 if (request.status == 401) {
-                    msg = "У вас не хватает прав для удаления";
+                    msg = "РЈ РІР°СЃ РЅРµ С…РІР°С‚Р°РµС‚ РїСЂР°РІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ";
                 } else if (request.status == 200) {
-                    msg = "Запись удалена";
+                    msg = "Р—Р°РїРёСЃСЊ СѓРґР°Р»РµРЅР°";
                 } else {
-                    msg = "Неизвестная ошибка";
+                    msg = "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°";
                 }
                 document.getElementById("msgDel").innerHTML = msg;
             }
@@ -105,11 +106,11 @@
             xmlhttp.onload = function (ev) {
                 var msg = ""
                 if (xmlhttp.status == 401) {
-                    msg = "У вас не хватает прав для создания";
+                    msg = "РЈ РІР°СЃ РЅРµ С…РІР°С‚Р°РµС‚ РїСЂР°РІ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ";
                 } else if (xmlhttp.status == 201) {
-                    msg = "Запись добавлена";
+                    msg = "Р—Р°РїРёСЃСЊ РґРѕР±Р°РІР»РµРЅР°";
                 } else {
-                    msg = "Неизвестная ошибка";
+                    msg = "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°";
                 }
                 document.getElementById("msgCrt").innerHTML = msg;
             }
@@ -145,7 +146,7 @@
         window.setInterval(LoadBlogs, 5000);
 
         function ParseResponseMsg() {
-            // Считывание данных с формы
+            // РЎС‡РёС‚С‹РІР°РЅРёРµ РґР°РЅРЅС‹С… СЃ С„РѕСЂРјС‹
             email = document.getElementById("Email").value;
             password = document.getElementById("Password").value;
 
@@ -154,17 +155,17 @@
             xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
             xmlhttp.onreadystatechange = function () {
-                // Очистка контейнера вывода сообщений
+                // РћС‡РёСЃС‚РєР° РєРѕРЅС‚РµР№РЅРµСЂР° РІС‹РІРѕРґР° СЃРѕРѕР±С‰РµРЅРёР№
                 document.getElementById("msg").innerHTML = ""
                 var mydiv = document.getElementById('formError');
                 while (mydiv.firstChild) {
                     mydiv.removeChild(mydiv.firstChild);
                 }
 
-                // Обработка ответа от сервера
+                // РћР±СЂР°Р±РѕС‚РєР° РѕС‚РІРµС‚Р° РѕС‚ СЃРµСЂРІРµСЂР°
                 myObj = JSON.parse(this.responseText);
                 document.getElementById("msg").innerHTML = myObj.message;
-                // Вывод сообщений об ошибках
+                // Р’С‹РІРѕРґ СЃРѕРѕР±С‰РµРЅРёР№ РѕР± РѕС€РёР±РєР°С…
                 if (typeof myObj.error !== "undefined" && myObj.error.length > 0) {
                     for (var i = 0; i < myObj.error.length; i++) {
                         var ul = document.getElementsByTagName("ul");
@@ -175,13 +176,13 @@
                 }
                 document.getElementById("Password").value = "";
             };
-            // Запрос на сервер
+            // Р—Р°РїСЂРѕСЃ РЅР° СЃРµСЂРІРµСЂ
             xmlhttp.send(JSON.stringify({
                 email: email,
                 password: password
             }));
         };
-        // Обработка клика по кнопке
+        // РћР±СЂР°Р±РѕС‚РєР° РєР»РёРєР° РїРѕ РєРЅРѕРїРєРµ
         document.getElementById("loginBtn").addEventListener("click", ParseResponseMsg);
 
     </script>
