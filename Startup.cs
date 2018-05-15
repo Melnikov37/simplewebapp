@@ -29,7 +29,8 @@ namespace EFGetStarted.AspNetCore.ExistingDb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<BloggingContext>();
+                .AddEntityFrameworkStores<BloggingContext>()
+                .AddDefaultTokenProviders(); ;
 
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -39,7 +40,14 @@ namespace EFGetStarted.AspNetCore.ExistingDb
             {
                 options.Cookie.Name = "SimpleWebApp";
                 options.LoginPath = "/";
+                options.AccessDeniedPath = "/";
+                options.LogoutPath = "/";
                 options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+                options.Events.OnRedirectToAccessDenied = context =>
                 {
                     context.Response.StatusCode = 401;
                     return Task.CompletedTask;
