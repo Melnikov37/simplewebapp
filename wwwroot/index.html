@@ -68,15 +68,15 @@
 
     <script>
         function GetCurrentUser() {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", "/api/Account/isAuthenticated", true);
-                xmlhttp.onreadystatechange = function () {
-                    var myObj = "";
-                    myObj = xmlhttp.responseText != "" ? JSON.parse(xmlhttp.responseText) : {};
-                    document.getElementById("msgAuth").innerHTML = myObj.message;
-                }
-                xmlhttp.send();
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "/api/Account/isAuthenticated", true);
+            xmlhttp.onreadystatechange = function () {
+                var myObj = "";
+                myObj = xmlhttp.responseText != "" ? JSON.parse(xmlhttp.responseText) : {};
+                document.getElementById("msgAuth").innerHTML = myObj.message;
             }
+            xmlhttp.send();
+        }
 
         function DeleteBlog() {
             var request = new XMLHttpRequest();
