@@ -99,7 +99,7 @@ namespace EFGetStarted.AspNetCore.ExistingDb.Controllers
         }
 
         // DELETE: api/BlogsApi/5
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlog([FromRoute] int id)
         {
