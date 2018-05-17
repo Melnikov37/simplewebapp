@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <Folder Include="sqlscripts\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>
