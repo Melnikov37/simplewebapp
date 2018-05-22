@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -9,7 +9,7 @@
         }
     </style>
 </head>
-<body onload="LoadBlogs(); GetCurrentUser();">
+<body onload="loadBlogs(); getCurrentUser();">
     <!--<p>Пример веб-API на основе руководства MS <a href="https://docs.microsoft.com/ru-ru/ef/core/get-started/aspnetcore/existing-db">Начало работы с EF Core в ASP.NET Core с существующей базой данных</a></p>-->
     <div class="container">
         <h3>Вход для зарегистрированных пользователей</h3>
@@ -44,7 +44,7 @@
             <label for="">URL:</label>
             <input id="createDiv" type="text" />
         </form>
-        <button onclick="CreateBlog();">Create</button>
+        <button onclick="createBlog();">Create</button>
         <div class="msgClass">
             <div id="msgCrt"></div>
         </div>
@@ -54,7 +54,7 @@
     <div>
         <h3>Удаление блога</h3>
         <select id="deleteDiv"></select>
-        <button onclick="DeleteBlog();">Delete</button>
+        <button onclick="deleteBlog();">Delete</button>
         <div class="msgClass">
             <div id="msgDel"></div>
         </div>
@@ -68,21 +68,21 @@
 
 
     <script>
-        function GetCurrentUser() {
+        function getCurrentUser() {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open("POST", "/api/Account/isAuthenticated", true);
             xmlhttp.onreadystatechange = function () {
-                var myObj = "";
-                myObj = xmlhttp.responseText != "" ? JSON.parse(xmlhttp.responseText) : {};
-                document.getElementById("msgAuth").innerHTML = myObj.message;
-            }
+                var user = "";
+                user = xmlhttp.responseText !== "" ? JSON.parse(xmlhttp.responseText) : {};
+                document.getElementById("msgAuth").innerHTML = user.message;
+            };
             xmlhttp.send();
         }
 
-        function DeleteBlog() {
+        function deleteBlog() {
             var request = new XMLHttpRequest();
             request.onload = function (ev) {
-                var msg = ""
+                var msg = "";
                 if (request.status == 401) {
                     msg = "У вас не хватает прав для удаления";
                 } else if (request.status == 200) {
@@ -91,7 +91,8 @@
                     msg = "Неизвестная ошибка";
                 }
                 document.getElementById("msgDel").innerHTML = msg;
-            }
+            };
+            var select, id, url = "";
             select = document.getElementById("deleteDiv");
             id = select.options[select.selectedIndex].value;
             url = "/api/blogsapi/" + id;
@@ -99,12 +100,13 @@
             request.send();
         }
 
-        function CreateBlog() {
+        function createBlog() {
+            var urlText = "";
             urlText = document.getElementById("createDiv").value;
 
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onload = function (ev) {
-                var msg = ""
+                var msg = "";
                 if (xmlhttp.status == 401) {
                     msg = "У вас не хватает прав для создания";
                 } else if (xmlhttp.status == 201) {
@@ -113,39 +115,39 @@
                     msg = "Неизвестная ошибка";
                 }
                 document.getElementById("msgCrt").innerHTML = msg;
-            }
+            };
             xmlhttp.open("POST", "/api/blogsapi/");
             xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xmlhttp.send(JSON.stringify({ url: urlText }));
         }
 
-        function LoadBlogs() {
-            var myObj, i, j, x, x2 = "";
+        function loadBlogs() {
+            var blogs, i, j, blogsHTML, blogsId = "";
             var request = new XMLHttpRequest();
             request.open("GET", "/api/blogsapi/", false);
             request.send();
 
-            myObj = JSON.parse(request.responseText);
+            blogs = JSON.parse(request.responseText);
 
-            var x = "";
-            for (i in myObj) {
-                x += "<h4>" + myObj[i].blogId + " : " + myObj[i].url + "</h4>";
-                for (j in myObj[i].post) {
-                    x += myObj[i].post[j].content + "<br>";
+            if (typeof blogs !== "undefined" && blogs.length > 0) {
+                for (i in blogs) {
+                    blogsHTML += "<h4>" + blogs[i].blogId + " : " + blogs[i].url + "</h4>";
+                    blogsId += "<option value=" + blogs[i].blogId + ">" + blogs[i].blogId + "</option>";
+                    if (typeof blogs[i].post !== "undefined" && blogs[i].post.length > 0) {
+                        for (j in blogs[i].post) {
+                            blogsHTML += blogs[i].post[j].content + "<br>";
+                        }
+                    }
                 }
+                document.getElementById("blogsDiv").innerHTML = blogsHTML;
+                document.getElementById("deleteDiv").innerHTML = blogsId;
             }
-            document.getElementById("blogsDiv").innerHTML = x;
-
-            for (i in myObj) {
-                x2 += "<option value=" + myObj[i].blogId + ">" + myObj[i].blogId + "</option>";
-            }
-
-            document.getElementById("deleteDiv").innerHTML = x2;
-            GetCurrentUser();
+            getCurrentUser();
         }
-        window.setInterval(LoadBlogs, 5000);
+        window.setInterval(loadBlogs, 5000);
 
-        function ParseResponseMsg() {
+        function parseResponseMsg() {
+            var email, password = "";
             // Считывание данных с формы
             email = document.getElementById("Email").value;
             password = document.getElementById("Password").value;
@@ -156,21 +158,22 @@
 
             xmlhttp.onreadystatechange = function () {
                 // Очистка контейнера вывода сообщений
-                document.getElementById("msg").innerHTML = ""
+                document.getElementById("msg").innerHTML = "";
                 var mydiv = document.getElementById('formError');
                 while (mydiv.firstChild) {
                     mydiv.removeChild(mydiv.firstChild);
                 }
 
                 // Обработка ответа от сервера
-                myObj = JSON.parse(this.responseText);
-                document.getElementById("msg").innerHTML = myObj.message;
+                var blogs = "";
+                blogs = JSON.parse(this.responseText);
+                document.getElementById("msg").innerHTML = blogs.message;
                 // Вывод сообщений об ошибках
-                if (typeof myObj.error !== "undefined" && myObj.error.length > 0) {
-                    for (var i = 0; i < myObj.error.length; i++) {
+                if (typeof blogs.error !== "undefined" && blogs.error.length > 0) {
+                    for (var i = 0; i < blogs.error.length; i++) {
                         var ul = document.getElementsByTagName("ul");
                         var li = document.createElement("li");
-                        li.appendChild(document.createTextNode(myObj.error[i]));
+                        li.appendChild(document.createTextNode(blogs.error[i]));
                         ul[0].appendChild(li);
                     }
                 }
@@ -181,9 +184,9 @@
                 email: email,
                 password: password
             }));
-        };
+        }
         // Обработка клика по кнопке
-        document.getElementById("loginBtn").addEventListener("click", ParseResponseMsg);
+        document.getElementById("loginBtn").addEventListener("click", parseResponseMsg);
 
     </script>
 </body>
