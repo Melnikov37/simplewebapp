@@ -121,27 +121,29 @@
             xmlhttp.send(JSON.stringify({ url: urlText }));
         }
 
-        function loadBlogs() {
-            var blogs, i, j, blogsHTML, blogsId = "";
+        function loadBlogs() {            
             var request = new XMLHttpRequest();
-            request.open("GET", "/api/blogsapi/", false);
-            request.send();
-
-            blogs = JSON.parse(request.responseText);
-
-            if (typeof blogs !== "undefined" && blogs.length > 0) {
-                for (i in blogs) {
-                    blogsHTML += "<h4>" + blogs[i].blogId + " : " + blogs[i].url + "</h4>";
-                    blogsId += "<option value=" + blogs[i].blogId + ">" + blogs[i].blogId + "</option>";
-                    if (typeof blogs[i].post !== "undefined" && blogs[i].post.length > 0) {
-                        for (j in blogs[i].post) {
-                            blogsHTML += blogs[i].post[j].content + "<br>";
+            request.open("GET", "/api/blogsapi/");
+            request.onload = function () {
+                var blogs, i, j, blogsId = "";
+                var blogsHTML = "";
+                blogs = JSON.parse(request.responseText);
+                if (typeof blogs !== "undefined" && blogs.length > 0) {
+                    for (i in blogs) {
+                        blogsHTML += "<h4>" + blogs[i].blogId + " : " + blogs[i].url + "</h4>";
+                        blogsId += "<option value=" + blogs[i].blogId + ">" + blogs[i].blogId + "</option>";
+                        if (typeof blogs[i].post !== "undefined" && blogs[i].post.length > 0) {
+                            for (j in blogs[i].post) {
+                                blogsHTML += blogs[i].post[j].content + "<br>";
+                            }
                         }
                     }
+                    document.getElementById("blogsDiv").innerHTML = blogsHTML;
+                    document.getElementById("deleteDiv").innerHTML = blogsId;
                 }
-                document.getElementById("blogsDiv").innerHTML = blogsHTML;
-                document.getElementById("deleteDiv").innerHTML = blogsId;
-            }
+            };
+            request.send();
+            
             getCurrentUser();
         }
         window.setInterval(loadBlogs, 5000);
