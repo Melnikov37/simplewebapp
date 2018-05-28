@@ -9,9 +9,9 @@
         }
     </style>
 </head>
+
 <body onload="loadBlogs(); getCurrentUser();">
-    <!--<p>Пример веб-API на основе руководства MS <a href="https://docs.microsoft.com/ru-ru/ef/core/get-started/aspnetcore/existing-db">Начало работы с EF Core в ASP.NET Core с существующей базой данных</a></p>-->
-    <div class="container">
+    <div>
         <h3>Вход для зарегистрированных пользователей</h3>
         <form>
             <div class="msgClass">
@@ -20,11 +20,11 @@
                 <ul id="formError"></ul>
             </div>
             <div>
-                <label for="">Email: </label><br />
+                <label for="Email">Email: </label><br />
                 <input type="text" id="Email" name="Email">
             </div>
             <div>
-                <label for="">Пароль: </label><br />
+                <label for="Password">Пароль: </label><br />
                 <input type="password" id="Password" name="Password">
             </div>
         </form>
